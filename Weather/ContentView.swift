@@ -14,8 +14,9 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            // Use dollar sign to specify binding variable
-            BackgroundView(isNight: $isNight)
+            // Use dollar sign to specify binding variable (not in this case
+            // but in the future)
+            BackgroundView(isNight: isNight)
             
             // Set background color and ignore safe areas
             // Color(.blue)
@@ -82,8 +83,9 @@ struct WeatherDayView: View {
                 .font(.system(size: 16, weight: .medium, design: .default))
                 .foregroundColor(.white)
             Image(systemName: imageName)
-                .renderingMode(.original)
+                .symbolRenderingMode(.palette)
                 .resizable()
+                .foregroundStyle(.white, .yellow, .blue)
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)
             Text("\(temperature)°")
@@ -95,14 +97,16 @@ struct WeatherDayView: View {
 
 struct BackgroundView: View {
     
-    // bind this variable to the state variable
-    @Binding var isNight: Bool
+    // Binding is not needed here, only used if var changes inside this view to
+    // update the one passed in
+    // @Binding var isNight: Bool
+    var isNight: Bool
     
     var body: some View {
         LinearGradient(gradient: Gradient(colors: [isNight ? .black : .blue, isNight ? .gray : Color("lightBlue")]),
                        startPoint: .topLeading,
                        endPoint: .bottomTrailing)
-        .edgesIgnoringSafeArea(.all)
+        .ignoresSafeArea(.all)
     }
 }
 
