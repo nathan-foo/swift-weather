@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    // dynamically update UI based on state
+    @State private var isNight = false
+    
     var body: some View {
         ZStack {
-            // Custom light blue color from Assets
-            BackgroundView(topColor: .blue, bottomColor: Color("lightBlue"))
+            // Use dollar sign to specify binding variable
+            BackgroundView(isNight: $isNight)
             
             // Set background color and ignore safe areas
             // Color(.blue)
@@ -20,7 +24,8 @@ struct ContentView: View {
             VStack {
                 CityTextView(cityName: "Austin, TX")
                 
-                MainWeatherStatusView(imageName: "cloud.sun.fill", temperature: 76)
+                // dynamically update image based on state
+                MainWeatherStatusView(imageName: isNight ? "moon.stars.fill" :"cloud.sun.fill", temperature: 76)
                 
                 HStack(spacing: 20) {
                     WeatherDayView(dayOfWeek: "TUE",
@@ -44,7 +49,8 @@ struct ContentView: View {
                 Spacer()
                 
                 Button {
-                    print("Button clicked")
+                    // update state on click
+                    isNight.toggle()
                 } label: {
                     WeatherButton(title: "Change Day Time",
                                   textColor: .blue,
@@ -89,11 +95,11 @@ struct WeatherDayView: View {
 
 struct BackgroundView: View {
     
-    var topColor: Color
-    var bottomColor: Color
+    // bind this variable to the state variable
+    @Binding var isNight: Bool
     
     var body: some View {
-        LinearGradient(gradient: Gradient(colors: [topColor, bottomColor]),
+        LinearGradient(gradient: Gradient(colors: [isNight ? .black : .blue, isNight ? .gray : Color("lightBlue")]),
                        startPoint: .topLeading,
                        endPoint: .bottomTrailing)
         .edgesIgnoringSafeArea(.all)
