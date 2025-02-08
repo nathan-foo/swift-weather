@@ -11,39 +11,16 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             // Custom light blue color from Assets
-            LinearGradient(gradient: Gradient(colors: [.blue, Color("lightBlue")]),
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(.all)
+            BackgroundView(topColor: .blue, bottomColor: Color("lightBlue"))
             
             // Set background color and ignore safe areas
             // Color(.blue)
             //     .edgesIgnoringSafeArea(.all)
             
             VStack {
-                // Order of modifiers (e.g. font, foregroundColor, etc.) matter
-                // Basically wrapping in another view
-                Text("Austin, TX")
-                    .font(.system(size: 32, weight: .medium, design: .default))
-                    .foregroundColor(.white)
-                    .padding()
-                // Parameters to set different options for VStack and HStack
+                CityTextView(cityName: "Austin, TX")
                 
-                VStack(spacing: 10) {
-                    // renderingMode sets to original color instead of black
-                    // resizable allows you to resize
-                    // aspectRatio makes image fit in frame
-                    // frame sets size parameters for image
-                    Image(systemName: "cloud.sun.fill")
-                        .renderingMode(.original)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 180, height: 180)
-                    Text("76°")
-                        .font(.system(size: 70, weight: .medium))
-                        .foregroundColor(.white)
-                }
-                .padding(.bottom, 40)
+                MainWeatherStatusView(imageName: "cloud.sun.fill", temperature: 76)
                 
                 HStack(spacing: 20) {
                     WeatherDayView(dayOfWeek: "TUE",
@@ -69,11 +46,9 @@ struct ContentView: View {
                 Button {
                     print("Button clicked")
                 } label: {
-                    Text("Change Day Time")
-                        .frame(width: 280, height: 50)
-                        .background(Color.white)
-                        .font(.system(size: 20, weight: .bold, design: .default))
-                        .cornerRadius(10)
+                    WeatherButton(title: "Change Day Time",
+                                  textColor: .blue,
+                                  backgroundColor: .white)
                 }
                 
                 Spacer()
@@ -111,3 +86,54 @@ struct WeatherDayView: View {
         }
     }
 }
+
+struct BackgroundView: View {
+    
+    var topColor: Color
+    var bottomColor: Color
+    
+    var body: some View {
+        LinearGradient(gradient: Gradient(colors: [topColor, bottomColor]),
+                       startPoint: .topLeading,
+                       endPoint: .bottomTrailing)
+        .edgesIgnoringSafeArea(.all)
+    }
+}
+
+struct CityTextView: View {
+    
+    var cityName: String
+    var body: some View {
+        // Order of modifiers (e.g. font, foregroundColor, etc.) matter
+        // Basically wrapping in another view
+        Text(cityName)
+            .font(.system(size: 32, weight: .medium, design: .default))
+            .foregroundColor(.white)
+            .padding()
+    }
+}
+
+struct MainWeatherStatusView: View {
+    
+    var imageName: String
+    var temperature: Int
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            // renderingMode sets to original color instead of black
+            // resizable allows you to resize
+            // aspectRatio makes image fit in frame
+            // frame sets size parameters for image
+            Image(systemName: imageName)
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 180, height: 180)
+            Text("\(temperature)°")
+                .font(.system(size: 70, weight: .medium))
+                .foregroundColor(.white)
+        }
+        .padding(.bottom, 40)
+    }
+}
+
